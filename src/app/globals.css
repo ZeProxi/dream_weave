@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* DreamWalk Color Palette Configuration for Tailwind v4 */
+@theme {
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', 'SFMono-Regular', monospace;
+
+  /* Primary backgrounds */
+  --color-primary-dark: #1a1b2e;
+  --color-secondary-dark: #2d1b4e;
+  --color-surface-dark: #0f0f23;
+  
+  /* Accent colors */
+  --color-accent-purple: #8b5cf6;
+  --color-accent-magenta: #ec4899;
+  --color-accent-cyan: #06b6d4;
+  
+  /* Action colors */
+  --color-action-orange: #f97316;
+  --color-action-blue: #3b82f6;
+  --color-success-green: #10b981;
+  --color-warning-yellow: #f59e0b;
+  --color-error-red: #ef4444;
+  
+  /* Text colors */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e5e7eb;
+  --color-text-muted: #6b7280;
+  --color-text-disabled: #374151;
+  
+  /* Border colors */
+  --color-border-light: #374151;
+  --color-border-medium: #4b5563;
+  --color-border-dark: #1f2937;
+
+  /* Background gradients */
+  --color-gradient-primary: linear-gradient(135deg, #1a1b2e 0%, #2d1b4e 100%);
+  --color-gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  --color-gradient-hero: linear-gradient(135deg, #0f0f23 0%, #1a1b2e 50%, #2d1b4e 100%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Apply the dark background by default */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1b2e 50%, #2d1b4e 100%);
+  color: #ffffff;
+}
+
+/* Custom scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1b2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Smooth transitions for interactive elements */
+* {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
 }
