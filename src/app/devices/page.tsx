@@ -324,6 +324,9 @@ export default function DevicesPage() {
               <a href="/devices" className="font-medium" style={{ color: 'var(--color-accent-purple)' }}>
                 Devices
               </a>
+              <a href="/elevenlabs" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+                ElevenLabs
+              </a>
               <a href="#analytics" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Analytics
               </a>

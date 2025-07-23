@@ -231,6 +231,9 @@ export default function InteractionsPage() {
               <a href="/devices" className="text-text_secondary hover:text-text_primary">
                 Devices
               </a>
+              <a href="/elevenlabs" className="text-text_secondary hover:text-text_primary">
+                ElevenLabs
+              </a>
               <a href="#analytics" className="text-text_secondary hover:text-text_primary">
                 Analytics
               </a>

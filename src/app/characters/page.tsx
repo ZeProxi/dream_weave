@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
+import { useToasts } from '../components/Toast';
 
 type Character = {
   id: number;
@@ -47,9 +48,23 @@ export default function CharactersPage() {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const toasts = useToasts();
 
   // Character creation form state
   const [newCharacter, setNewCharacter] = useState({
+    name: '',
+    description: '',
+    personality: '',
+    system_prompt: '',
+    voice_id: '',
+    is_active: true
+  });
+
+  // Character editing form state
+  const [editCharacterData, setEditCharacterData] = useState({
     name: '',
     description: '',
     personality: '',
@@ -131,12 +146,12 @@ export default function CharactersPage() {
     if (!supabase) return;
 
     if (!newCharacter.name.trim()) {
-      alert('Character name is required');
+      toasts.error('Character name is required');
       return;
     }
 
     if (!newCharacter.voice_id) {
-      alert('Please select a voice for your character');
+      toasts.error('Please select a voice for your character');
       return;
     }
 
@@ -158,11 +173,12 @@ export default function CharactersPage() {
 
       if (error) {
         console.error('❌ Error creating character:', error);
-        alert('Failed to create character: ' + error.message);
+        toasts.error('Failed to create character: ' + error.message);
         return;
       }
 
       console.log('✅ Character created successfully:', data);
+      toasts.success(`Character "${newCharacter.name}" created successfully!`);
       
       // Reset form and close modal
       setNewCharacter({
@@ -180,10 +196,88 @@ export default function CharactersPage() {
 
     } catch (error) {
       console.error('❌ Failed to create character (catch):', error);
-      alert('Failed to create character');
+      toasts.error('Failed to create character');
     } finally {
       setIsCreating(false);
     }
+  };
+
+  // Update existing character
+  const updateCharacter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supabase || !editingCharacter) return;
+
+    if (!editCharacterData.name.trim()) {
+      toasts.error('Character name is required');
+      return;
+    }
+
+    if (!editCharacterData.voice_id) {
+      toasts.error('Please select a voice for your character');
+      return;
+    }
+
+    try {
+      setIsUpdating(true);
+      console.log('🔄 Updating character:', { id: editingCharacter.id, data: editCharacterData });
+
+      const { data, error } = await supabase
+        .from('characters')
+        .update({
+          name: editCharacterData.name.trim(),
+          description: editCharacterData.description.trim() || null,
+          personality: editCharacterData.personality.trim() || null,
+          system_prompt: editCharacterData.system_prompt.trim() || null,
+          voice_id: editCharacterData.voice_id,
+          is_active: editCharacterData.is_active
+        })
+        .eq('id', editingCharacter.id)
+        .select();
+
+      if (error) {
+        console.error('❌ Error updating character:', error);
+        toasts.error('Failed to update character: ' + error.message);
+        return;
+      }
+
+      console.log('✅ Character updated successfully:', data);
+      toasts.success(`Character "${editCharacterData.name}" updated successfully!`);
+      
+      // Reset form and close modal
+      setEditCharacterData({
+        name: '',
+        description: '',
+        personality: '',
+        system_prompt: '',
+        voice_id: '',
+        is_active: true
+      });
+      setShowEditModal(false);
+      setEditingCharacter(null);
+      
+      // Refresh characters list
+      fetchCharacters();
+
+    } catch (error) {
+      console.error('❌ Failed to update character (catch):', error);
+      toasts.error('Failed to update character');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  // Open edit modal with character data
+  const openEditModal = (character: Character) => {
+    setEditingCharacter(character);
+    setEditCharacterData({
+      name: character.name,
+      description: character.description || '',
+      personality: character.personality || '',
+      system_prompt: character.system_prompt || '',
+      voice_id: character.voice_id || '',
+      is_active: character.is_active
+    });
+    setShowEditModal(true);
   };
 
   // Format date
@@ -271,6 +365,9 @@ export default function CharactersPage() {
               </a>
               <a href="/devices" className="text-text_secondary hover:text-text_primary">
                 Devices
+              </a>
+              <a href="/elevenlabs" className="text-text_secondary hover:text-text_primary">
+                ElevenLabs
               </a>
               <a href="#analytics" className="text-text_secondary hover:text-text_primary">
                 Analytics
@@ -383,6 +480,24 @@ export default function CharactersPage() {
                               <span>{formatDate(character.created_at)}</span>
                             </div>
                           </div>
+                          
+                          {/* Edit Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEditModal(character);
+                            }}
+                            className="p-2 rounded-lg hover:bg-opacity-80 transition-colors"
+                            style={{ 
+                              backgroundColor: 'var(--color-accent-purple)',
+                              color: 'white'
+                            }}
+                            title="Edit Character"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
                         </div>
                         
                         {character.personality && (
@@ -720,6 +835,191 @@ export default function CharactersPage() {
                     }}
                   >
                     {isCreating ? 'Creating...' : 'Create Character'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Character Modal */}
+      {showEditModal && editingCharacter && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl" style={{ 
+            backgroundColor: 'var(--color-secondary-dark)', 
+            borderColor: 'var(--color-border-medium)',
+            border: '1px solid'
+          }}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                  Edit Character: {editingCharacter.name}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingCharacter(null);
+                  }}
+                  className="text-2xl hover:opacity-70"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  ×
+                </button>
+              </div>
+
+              <form onSubmit={updateCharacter} className="space-y-6">
+                {/* Character Name */}
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                    Character Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={editCharacterData.name}
+                    onChange={(e) => setEditCharacterData({...editCharacterData, name: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border text-sm"
+                    style={{ 
+                      backgroundColor: 'var(--color-surface-dark)',
+                      borderColor: 'var(--color-border-medium)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    placeholder="Enter character name"
+                    required
+                  />
+                </div>
+
+                {/* Voice Selection */}
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                    ElevenLabs Voice *
+                  </label>
+                  <select
+                    value={editCharacterData.voice_id}
+                    onChange={(e) => setEditCharacterData({...editCharacterData, voice_id: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border text-sm"
+                    style={{ 
+                      backgroundColor: 'var(--color-surface-dark)',
+                      borderColor: 'var(--color-border-medium)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    required
+                  >
+                    <option value="">Select a voice</option>
+                    {voices.map((voice) => (
+                      <option key={voice.id} value={voice.voice_id}>
+                        {voice.name} {voice.gender ? `(${voice.gender})` : ''} {voice.accent ? `- ${voice.accent}` : ''}
+                      </option>
+                    ))}
+                  </select>
+                  {editCharacterData.voice_id && getSelectedVoice(editCharacterData.voice_id) && (
+                    <div className="mt-2 p-3 rounded-lg" style={{ backgroundColor: 'var(--color-bg-tertiary)' }}>
+                      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                        <strong>Selected Voice:</strong> {getSelectedVoice(editCharacterData.voice_id)?.name}
+                      </p>
+                      {getSelectedVoice(editCharacterData.voice_id)?.description && (
+                        <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                          {safeRender(getSelectedVoice(editCharacterData.voice_id)?.description)}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Character Description */}
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                    Character Description
+                  </label>
+                  <textarea
+                    value={editCharacterData.description}
+                    onChange={(e) => setEditCharacterData({...editCharacterData, description: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border text-sm h-24 resize-none"
+                    style={{ 
+                      backgroundColor: 'var(--color-surface-dark)',
+                      borderColor: 'var(--color-border-medium)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    placeholder="Describe your character's appearance, background, etc."
+                  />
+                </div>
+
+                {/* Personality */}
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                    Personality Traits
+                  </label>
+                  <textarea
+                    value={editCharacterData.personality}
+                    onChange={(e) => setEditCharacterData({...editCharacterData, personality: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border text-sm h-24 resize-none"
+                    style={{ 
+                      backgroundColor: 'var(--color-surface-dark)',
+                      borderColor: 'var(--color-border-medium)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    placeholder="Describe personality traits, mannerisms, speaking style, etc."
+                  />
+                </div>
+
+                {/* System Prompt */}
+                <div>
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>
+                    System Prompt (Advanced)
+                  </label>
+                  <textarea
+                    value={editCharacterData.system_prompt}
+                    onChange={(e) => setEditCharacterData({...editCharacterData, system_prompt: e.target.value})}
+                    className="w-full px-4 py-3 rounded-lg border text-sm h-32 resize-none"
+                    style={{ 
+                      backgroundColor: 'var(--color-surface-dark)',
+                      borderColor: 'var(--color-border-medium)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                    placeholder="Custom system prompt for AI behavior (optional)"
+                  />
+                </div>
+
+                {/* Active Status */}
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="edit-is-active"
+                    checked={editCharacterData.is_active}
+                    onChange={(e) => setEditCharacterData({...editCharacterData, is_active: e.target.checked})}
+                    className="w-4 h-4 rounded"
+                  />
+                  <label htmlFor="edit-is-active" className="text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                    Character is active and available for use
+                  </label>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-4 pt-4 border-t" style={{ borderColor: 'var(--color-border-dark)' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setEditingCharacter(null);
+                    }}
+                    className="px-6 py-3 rounded-lg font-medium hover:opacity-90"
+                    style={{ 
+                      backgroundColor: 'var(--color-text-muted)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isUpdating}
+                    className="px-6 py-3 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent-purple)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                  >
+                    {isUpdating ? 'Updating...' : 'Update Character'}
                   </button>
                 </div>
               </form>

@@ -601,6 +601,9 @@ export default function Dashboard() {
               <a href="/devices" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Devices
               </a>
+              <a href="/elevenlabs" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+                ElevenLabs
+              </a>
               <a href="#analytics" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Analytics
               </a>
