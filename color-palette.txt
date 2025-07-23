@@ -1,0 +1,62 @@
+# UI Color Palette - Mystical Dark Theme
+# Based on futuristic/otherworldly design with dark backgrounds and vibrant accents
+
+## PRIMARY COLORS
+# Main backgrounds and foundation colors
+primary-dark: #1a1b2e          # Deep navy/dark purple - main background
+secondary-dark: #2d1b4e        # Rich purple - secondary background, cards, panels
+surface-dark: #0f0f23          # Darkest shade - overlays, modals
+
+## ACCENT COLORS
+# Interactive elements and highlights
+accent-purple: #8b5cf6         # Electric purple - primary buttons, links, active states
+accent-magenta: #ec4899        # Bright magenta - secondary accents, highlights, hover states
+accent-cyan: #06b6d4           # Cyan blue - tertiary accents, info elements, focus states
+
+## ACTION COLORS
+# Call-to-action and status indicators
+action-orange: #f97316         # Warm orange - primary CTA buttons, important actions
+action-blue: #3b82f6           # Electric blue - secondary actions, links
+success-green: #10b981         # Success states, confirmations
+warning-yellow: #f59e0b        # Warning states, alerts
+error-red: #ef4444             # Error states, destructive actions
+
+## TEXT COLORS
+# Typography and content
+text-primary: #ffffff          # Pure white - headings, primary text
+text-secondary: #e5e7eb        # Light gray - secondary text, descriptions
+text-muted: #6b7280            # Medium gray - muted text, captions, placeholders
+text-disabled: #374151         # Dark gray - disabled text
+
+## NEUTRAL COLORS
+# Borders, dividers, and subtle elements
+border-light: #374151          # Light borders, dividers
+border-medium: #4b5563         # Medium borders, input fields
+border-dark: #1f2937           # Dark borders, subtle separators
+
+## GRADIENTS
+# For backgrounds and special effects
+gradient-primary: linear-gradient(135deg, #1a1b2e 0%, #2d1b4e 100%)
+gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)
+gradient-hero: linear-gradient(135deg, #0f0f23 0%, #1a1b2e 50%, #2d1b4e 100%)
+
+## OPACITY VARIANTS
+# For overlays and transparency effects
+overlay-light: rgba(26, 27, 46, 0.8)    # Light overlay
+overlay-medium: rgba(26, 27, 46, 0.9)   # Medium overlay  
+overlay-dark: rgba(15, 15, 35, 0.95)    # Dark overlay
+
+## USAGE GUIDELINES
+# Primary Dark (#1a1b2e) - Use for main page backgrounds, large containers
+# Secondary Dark (#2d1b4e) - Use for cards, panels, secondary containers
+# Accent Purple (#8b5cf6) - Use for primary interactive elements, main CTAs
+# Accent Magenta (#ec4899) - Use for highlights, hover states, secondary actions
+# Action Orange (#f97316) - Use for important call-to-action buttons
+# Text Primary (#ffffff) - Use for headings, important text
+# Text Secondary (#e5e7eb) - Use for body text, descriptions
+
+## ACCESSIBILITY NOTES
+# Ensure minimum contrast ratio of 4.5:1 for normal text
+# Use 3:1 minimum for large text (18pt+ or 14pt+ bold)
+# Test color combinations for colorblind accessibility
+# Provide alternative indicators beyond color for important information

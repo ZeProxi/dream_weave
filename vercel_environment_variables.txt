@@ -1,0 +1,52 @@
+# DreamWalk Frontend Environment Variables for Vercel
+# ===================================================
+
+## 🔧 Add these environment variables to your Vercel project:
+
+### 1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
+
+### 2. Add these variables:
+
+## Backend API Configuration (Your EC2 Server)
+NEXT_PUBLIC_API_URL=https://your-ec2-domain.com:3001
+NEXT_PUBLIC_WS_URL=wss://your-ec2-domain.com:3002  
+NEXT_PUBLIC_API_KEY=your-backend-api-key-for-frontend-auth
+
+## Supabase Database Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://nbawhiamdwsagnwdfmin.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key-here
+
+## 📋 How to find your Supabase keys:
+
+### 1. Go to your Supabase project dashboard
+### 2. Click "Settings" → "API"
+### 3. Copy the following:
+
+Project URL: https://nbawhiamdwsagnwdfmin.supabase.co
+Anon/Public Key: [Found in API settings - starts with "eyJ..."]
+
+## 🔒 Security Notes:
+
+- NEXT_PUBLIC_SUPABASE_ANON_KEY is safe to expose (it's the public key)
+- Use Row Level Security (RLS) in Supabase for data protection
+- The anon key only allows operations you've configured in RLS policies
+
+## 📊 Expected Values:
+
+After configuration, your dashboard will show:
+✅ Database: Connected  
+✅ OpenAI API: Operational (from public status check)
+✅ ElevenLabs API: Operational (from connectivity test)
+🔴 Backend Server: Not running (until EC2 is set up)
+
+## 🚀 Next Steps:
+
+1. Add these environment variables to Vercel
+2. Redeploy your Vercel app
+3. Your dashboard will now show real data from Supabase
+4. Set up your EC2 backend using instructions_backend.txt
+5. Update NEXT_PUBLIC_API_URL with your EC2 domain
+
+---
+
+Your dashboard is now connected to live data! 🎉 
