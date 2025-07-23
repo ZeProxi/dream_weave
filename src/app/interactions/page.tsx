@@ -228,7 +228,7 @@ export default function InteractionsPage() {
               <a href="/characters" className="text-text_secondary hover:text-text_primary">
                 Characters
               </a>
-              <a href="#devices" className="text-text_secondary hover:text-text_primary">
+              <a href="/devices" className="text-text_secondary hover:text-text_primary">
                 Devices
               </a>
               <a href="#analytics" className="text-text_secondary hover:text-text_primary">

@@ -269,7 +269,7 @@ export default function CharactersPage() {
               <a href="/characters" className="font-medium" style={{ color: 'var(--color-accent-purple)' }}>
                 Characters
               </a>
-              <a href="#devices" className="text-text_secondary hover:text-text_primary">
+              <a href="/devices" className="text-text_secondary hover:text-text_primary">
                 Devices
               </a>
               <a href="#analytics" className="text-text_secondary hover:text-text_primary">

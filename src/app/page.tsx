@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -169,11 +170,12 @@ export default function Dashboard() {
       const { data: avgResponseData } = await supabase
         .from('interactions')
         .select('response_time')
-        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-        .not('response_time', 'is', null);
+        .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
 
-      const avgResponseTime = avgResponseData && avgResponseData.length > 0
-        ? avgResponseData.reduce((sum: number, interaction: any) => sum + (interaction.response_time || 0), 0) / avgResponseData.length / 1000
+      // Filter out null values and calculate average
+      const validDashboardResponseTimes = avgResponseData?.filter(item => item.response_time != null && item.response_time > 0) || [];
+      const avgResponseTime = validDashboardResponseTimes.length > 0
+        ? validDashboardResponseTimes.reduce((sum: number, interaction: any) => sum + interaction.response_time, 0) / validDashboardResponseTimes.length / 1000
         : null;
 
       setDashboardStats({
@@ -336,11 +338,12 @@ export default function Dashboard() {
           .from('interactions')
           .select('response_time_ms')
           .gte('created_at', hourStart.toISOString())
-          .lt('created_at', hourEnd.toISOString())
-          .not('response_time_ms', 'is', null);
+          .lt('created_at', hourEnd.toISOString());
 
-        const avgTime = hourlyData && hourlyData.length > 0
-          ? hourlyData.reduce((sum, item) => sum + (item.response_time_ms || 0), 0) / hourlyData.length / 1000
+        // Filter out null values and calculate average
+        const validResponseTimes = hourlyData?.filter(item => item.response_time_ms != null && item.response_time_ms > 0) || [];
+        const avgTime = validResponseTimes.length > 0
+          ? validResponseTimes.reduce((sum, item) => sum + item.response_time_ms, 0) / validResponseTimes.length / 1000
           : 0;
 
         responseTimeChart.push({
@@ -401,11 +404,12 @@ export default function Dashboard() {
       const { data: avgResponseData } = await supabase
         .from('interactions')
         .select('response_time_ms')
-        .gte('created_at', yesterday.toISOString())
-        .not('response_time_ms', 'is', null);
+        .gte('created_at', yesterday.toISOString());
 
-      const avgResponseTime = avgResponseData && avgResponseData.length > 0
-        ? avgResponseData.reduce((sum, item) => sum + (item.response_time_ms || 0), 0) / avgResponseData.length / 1000
+      // Filter out null values and calculate average
+      const validAvgResponseTimes = avgResponseData?.filter(item => item.response_time_ms != null && item.response_time_ms > 0) || [];
+      const avgResponseTime = validAvgResponseTimes.length > 0
+        ? validAvgResponseTimes.reduce((sum, item) => sum + item.response_time_ms, 0) / validAvgResponseTimes.length / 1000
         : null;
 
       setMetricsData({
@@ -594,7 +598,7 @@ export default function Dashboard() {
               <a href="/characters" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Characters
               </a>
-              <a href="#devices" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+              <a href="/devices" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Devices
               </a>
               <a href="#analytics" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
@@ -948,29 +952,25 @@ export default function Dashboard() {
             }}>
               <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full font-medium py-3 px-4 rounded-lg hover:opacity-90" style={{ 
-                  background: 'var(--color-gradient-accent)', 
-                  color: 'var(--color-text-primary)' 
-                }}>
-                  Create New Character
-                </button>
-                <button 
-                  className={`w-full font-medium py-3 px-4 rounded-lg ${dashboardStats.onlineDevices === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
-                  disabled={dashboardStats.onlineDevices === 0}
-                  style={{ 
-                    backgroundColor: 'var(--color-action-blue)', 
-                    color: 'var(--color-text-primary)' 
-                  }}
-                >
-                  {dashboardStats.onlineDevices === 0 ? 'Deploy to Device (No devices)' : `Deploy to Device (${dashboardStats.onlineDevices} available)`}
-                </button>
-                <button className="w-full border font-medium py-3 px-4 rounded-lg hover:opacity-80" style={{ 
-                  backgroundColor: 'var(--color-surface-dark)', 
-                  borderColor: 'var(--color-border-medium)', 
-                  color: 'var(--color-text-primary)' 
-                }}>
-                  View Analytics
-                </button>
+                <Link href="/characters">
+                  <div className="block w-full font-medium py-3 px-4 rounded-lg hover:opacity-90 text-center cursor-pointer" style={{ 
+                    background: 'var(--color-gradient-accent)', 
+                    color: 'var(--color-text-primary)',
+                    textDecoration: 'none'
+                  }}>
+                    Manage Characters
+                  </div>
+                </Link>
+                <Link href="/interactions">
+                  <div className="block w-full border font-medium py-3 px-4 rounded-lg hover:opacity-80 text-center cursor-pointer" style={{ 
+                    backgroundColor: 'var(--color-surface-dark)', 
+                    borderColor: 'var(--color-border-medium)', 
+                    color: 'var(--color-text-primary)',
+                    textDecoration: 'none'
+                  }}>
+                    View Interactions
+                  </div>
+                </Link>
               </div>
             </div>
 
@@ -1055,13 +1055,13 @@ export default function Dashboard() {
           }}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Recent Activity</h3>
-              <a 
+              <Link 
                 href="/interactions"
                 className="text-sm font-medium hover:opacity-80"
                 style={{ color: 'var(--color-accent-cyan)' }}
               >
                 View All
-              </a>
+              </Link>
             </div>
 
             {dbConnectionStatus === 'connected' ? (
