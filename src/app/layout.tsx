@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-primary_dark text-text_primary`}
       >
         <ToastProvider>
-          {children}
+        {children}
         </ToastProvider>
       </body>
     </html>
