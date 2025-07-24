@@ -1,13 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+
+interface VoiceSample {
+  sample_id: string;
+  file_name: string;
+  mime_type: string;
+  size_bytes: number;
+  hash: string;
+}
+
+interface VoiceLabels {
+  [key: string]: string;
+}
 
 interface ElevenLabsVoice {
   voice_id: string;
   name: string;
-  samples?: any[];
+  samples?: VoiceSample[];
   category: string;
   description?: string;
   preview_url?: string;
-  labels?: any;
+  labels?: VoiceLabels;
   settings?: {
     stability?: number;
     similarity_boost?: number;
@@ -37,7 +49,7 @@ interface ElevenLabsResponse {
   next_page_token?: string;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   console.log('🎙️ ElevenLabs API route called');
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
@@ -115,12 +127,12 @@ export async function GET(request: NextRequest) {
       success: true
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Error fetching ElevenLabs voices:', error);
     return NextResponse.json(
       { 
         error: 'Failed to fetch voices from ElevenLabs', 
-        details: error?.message || String(error) 
+        details: error instanceof Error ? error.message : String(error) 
       }, 
       { status: 500 }
     );

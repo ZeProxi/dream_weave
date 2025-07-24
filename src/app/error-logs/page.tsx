@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
 
@@ -221,7 +222,7 @@ export default function ErrorLogsPage() {
     testConnection();
     fetchErrorLogs();
     fetchErrorTypes();
-  }, [currentPage, filterType]);
+  }, [currentPage, filterType, fetchErrorLogs]);
 
   // Real-time subscription
   useEffect(() => {
@@ -239,7 +240,7 @@ export default function ErrorLogsPage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [fetchErrorLogs]);
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-gradient-hero)' }}>
@@ -261,30 +262,30 @@ export default function ErrorLogsPage() {
               />
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-text_secondary hover:text-text_primary">
+              <Link href="/" className="text-text_secondary hover:text-text_primary">
                 Dashboard
-              </a>
-              <a href="/interactions" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/interactions" className="text-text_secondary hover:text-text_primary">
                 Interactions
-              </a>
-              <a href="/characters" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/characters" className="text-text_secondary hover:text-text_primary">
                 Characters
-              </a>
-              <a href="/devices" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/devices" className="text-text_secondary hover:text-text_primary">
                 Devices
-              </a>
-              <a href="/elevenlabs" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/elevenlabs" className="text-text_secondary hover:text-text_primary">
                 ElevenLabs
-              </a>
-              <a href="#analytics" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="#analytics" className="text-text_secondary hover:text-text_primary">
                 Analytics
-              </a>
-              <a href="/error-logs" className="font-medium" style={{ color: 'var(--color-error-red)' }}>
+              </Link>
+              <Link href="/error-logs" className="font-medium" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
-              </a>
-              <a href="#settings" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="#settings" className="text-text_secondary hover:text-text_primary">
                 Settings
-              </a>
+              </Link>
             </nav>
           </div>
         </div>

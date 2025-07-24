@@ -2,22 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useToasts } from '../components/Toast';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+type DeviceRecord = Record<string, unknown> & {
+  id: number;
+  name: string;
+  status: string;
+};
+
+type CharacterRecord = Record<string, unknown> & {
+  id: number;
+  name: string;
+};
+
 export default function DevicesPage() {
-  const [devices, setDevices] = useState<any[]>([]);
-  const [characters, setCharacters] = useState<any[]>([]);
+  const [devices, setDevices] = useState<DeviceRecord[]>([]);
+  const [characters, setCharacters] = useState<CharacterRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDevice, setSelectedDevice] = useState<any>(null);
+  const [selectedDevice, setSelectedDevice] = useState<DeviceRecord | null>(null);
   const [filterStatus, setFilterStatus] = useState('all');
-  const [supabase, setSupabase] = useState<any>(null);
+  const [supabase, setSupabase] = useState<ReturnType<typeof createClient> | null>(null);
   const toasts = useToasts();
 
   // Safe rendering utility
-  const safeRender = (data: any) => {
+  const safeRender = (data: unknown) => {
     if (data === null || data === undefined || data === '') return '--';
     if (typeof data === 'object') return JSON.stringify(data);
     return String(data);
@@ -302,7 +315,7 @@ export default function DevicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <img
+              <Image
                 src="/dreamwalk-logo.webp"
                 alt="DreamWalk Logo"
                 width={120}
@@ -312,12 +325,12 @@ export default function DevicesPage() {
               />
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+              <Link href="/" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Dashboard
-              </a>
-              <a href="/interactions" className="hover:opacity-80" style={{ color: 'var(--color-accent-cyan)' }}>
+              </Link>
+              <Link href="/interactions" className="hover:opacity-80" style={{ color: 'var(--color-accent-cyan)' }}>
                 Interactions
-              </a>
+              </Link>
               <a href="/characters" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Characters
               </a>

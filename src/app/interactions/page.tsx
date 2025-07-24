@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
 
@@ -66,7 +67,7 @@ export default function InteractionsPage() {
       console.log('📊 Fetching interactions...', { currentPage, filterDevice, filterCharacter, interactionsPerPage });
 
       // Build query with relationships
-      let query = supabase
+      const query = supabase
         .from('interactions')
         .select(`
           *,
@@ -155,12 +156,12 @@ export default function InteractionsPage() {
   };
 
   // Safely render data that might be an object
-  const safeRender = (data: any): string => {
+  const safeRender = (data: unknown): string => {
     if (data === null || data === undefined) return '';
     if (typeof data === 'object') {
       try {
         return JSON.stringify(data, null, 2);
-      } catch (e) {
+      } catch {
         return '[Complex Object]';
       }
     }
@@ -179,7 +180,7 @@ export default function InteractionsPage() {
     console.log('🚀 Interactions Page - useEffect triggered');
     fetchInteractions();
     fetchFilterOptions();
-  }, [currentPage, filterDevice, filterCharacter]);
+  }, [currentPage, filterDevice, filterCharacter, fetchInteractions]);
 
   // Real-time subscription
   useEffect(() => {
@@ -197,7 +198,7 @@ export default function InteractionsPage() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [fetchInteractions]);
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-gradient-hero)' }}>
@@ -219,30 +220,30 @@ export default function InteractionsPage() {
               />
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-text_secondary hover:text-text_primary">
+              <Link href="/" className="text-text_secondary hover:text-text_primary">
                 Dashboard
-              </a>
-              <a href="/interactions" className="font-medium" style={{ color: 'var(--color-accent-cyan)' }}>
+              </Link>
+              <Link href="/interactions" className="font-medium" style={{ color: 'var(--color-accent-cyan)' }}>
                 Interactions
-              </a>
-              <a href="/characters" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/characters" className="text-text_secondary hover:text-text_primary">
                 Characters
-              </a>
-              <a href="/devices" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/devices" className="text-text_secondary hover:text-text_primary">
                 Devices
-              </a>
-              <a href="/elevenlabs" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="/elevenlabs" className="text-text_secondary hover:text-text_primary">
                 ElevenLabs
-              </a>
-              <a href="#analytics" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="#analytics" className="text-text_secondary hover:text-text_primary">
                 Analytics
-              </a>
-              <a href="/error-logs" className="hover:opacity-80" style={{ color: 'var(--color-error-red)' }}>
+              </Link>
+              <Link href="/error-logs" className="hover:opacity-80" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
-              </a>
-              <a href="#settings" className="text-text_secondary hover:text-text_primary">
+              </Link>
+              <Link href="#settings" className="text-text_secondary hover:text-text_primary">
                 Settings
-              </a>
+              </Link>
             </nav>
           </div>
         </div>

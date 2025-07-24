@@ -44,13 +44,13 @@ export default function Dashboard() {
     totalCharacters: 0,
     avgResponseTime: null
   });
-  const [recentInteractions, setRecentInteractions] = useState<any[]>([]);
+  const [recentInteractions, setRecentInteractions] = useState<Record<string, unknown>[]>([]);
   const [backendConnected, setBackendConnected] = useState(false);
   const [lastDataUpdate, setLastDataUpdate] = useState<Date>(new Date());
-  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isLoadingData] = useState(false);
   const [dbConnectionStatus, setDbConnectionStatus] = useState<'unknown' | 'connected' | 'error'>('unknown');
   const [clientTime, setClientTime] = useState<string>('');
-  const [recentErrors, setRecentErrors] = useState<any[]>([]);
+  const [recentErrors, setRecentErrors] = useState<Record<string, unknown>[]>([]);
   const [lastUpdateTime, setLastUpdateTime] = useState<string>('');
   const [metricsData, setMetricsData] = useState({
     totalInteractions24h: 0,
@@ -59,18 +59,18 @@ export default function Dashboard() {
     responseTimeTrend: 0,
     errorRate: 0,
     totalErrors: 0,
-    responseTimeChart: [] as any[],
-    errorChart: [] as any[],
-    characterUsage: [] as any[]
+    responseTimeChart: [] as Array<Record<string, unknown>>,
+    errorChart: [] as Array<Record<string, unknown>>,
+    characterUsage: [] as Array<Record<string, unknown>>
   });
 
   // Safely render data that might be an object
-  const safeRender = (data: any): string => {
+  const safeRender = (data: unknown): string => {
     if (data === null || data === undefined) return '';
     if (typeof data === 'object') {
       try {
         return JSON.stringify(data, null, 2);
-      } catch (e) {
+      } catch {
         return '[Complex Object]';
       }
     }
