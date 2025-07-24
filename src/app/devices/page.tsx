@@ -346,9 +346,9 @@ export default function DevicesPage() {
               <a href="/error-logs" className="hover:opacity-80" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
               </a>
-              <a href="#settings" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+              <Link href="/settings" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Settings
-              </a>
+              </Link>
             </nav>
           </div>
         </div>

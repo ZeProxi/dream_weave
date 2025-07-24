@@ -376,7 +376,7 @@ export default function CharactersPage() {
               <Link href="/error-logs" className="hover:opacity-80" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
               </Link>
-              <Link href="#settings" className="text-text_secondary hover:text-text_primary">
+              <Link href="/settings" className="text-text_secondary hover:text-text_primary">
                 Settings
               </Link>
             </nav>

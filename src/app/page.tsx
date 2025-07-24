@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from '@supabase/supabase-js';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import AuthButton from './components/AuthButton';
 
 // Debug environment variables
 console.log('🔧 Environment Variables Debug:');
@@ -610,10 +611,11 @@ export default function Dashboard() {
               <a href="/error-logs" className="hover:opacity-80" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
               </a>
-              <a href="#settings" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+              <Link href="/settings" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Settings
-              </a>
+              </Link>
             </nav>
+            <AuthButton />
           </div>
         </div>
       </header>

@@ -354,7 +354,7 @@ export default function ElevenLabsPage() {
               <Link href="/error-logs" className="hover:opacity-80" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
               </Link>
-              <Link href="#settings" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
+              <Link href="/settings" className="hover:opacity-80" style={{ color: 'var(--color-text-secondary)' }}>
                 Settings
               </Link>
             </nav>

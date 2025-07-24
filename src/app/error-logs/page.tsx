@@ -283,7 +283,7 @@ export default function ErrorLogsPage() {
               <Link href="/error-logs" className="font-medium" style={{ color: 'var(--color-error-red)' }}>
                 Error Logs
               </Link>
-              <Link href="#settings" className="text-text_secondary hover:text-text_primary">
+              <Link href="/settings" className="text-text_secondary hover:text-text_primary">
                 Settings
               </Link>
             </nav>
